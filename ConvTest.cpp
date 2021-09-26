@@ -22,7 +22,7 @@
 using namespace cv;
 using namespace std;
 
-static void show_usage(std::string name)
+static void show_usage(const std::string& name)
 {
     std::cerr << "Usage: " << name << " <option(s)> SOURCE-IMG" << std::endl
         << "Options:\n"
@@ -52,8 +52,8 @@ int main(int argc, char** argv)
     int scale = 2;
     String path;
 
-    if (paras.count("--fast") || paras.count("-f")) {
-        auto func_fast = [&](String str) {
+    if ((paras.count("--fast") != 0u) || (paras.count("-f") != 0u)) {
+        auto func_fast = [&](const String& str) {
             if ("True" == str || "TRUE" == str || "true" == str) {
                 fast = true;
             }
@@ -65,10 +65,10 @@ int main(int argc, char** argv)
                 exit(1);
             }
         };
-        if (paras.count("--fast")) {
+        if (paras.count("--fast") != 0u) {
             func_fast(paras["--fast"]);
         }
-        else if (paras.count("-f")) {
+        else if (paras.count("-f") != 0u) {
             func_fast(paras["-f"]);
         }
     }
@@ -77,8 +77,8 @@ int main(int argc, char** argv)
     //    return 1;
     //}
 
-    if (paras.count("--scale") || paras.count("-s")) {
-        auto func_fast = [&](String str) {
+    if ((paras.count("--scale") != 0u) || (paras.count("-s") != 0u)) {
+        auto func_fast = [&](const String& str) {
             if ("2" == str) {
                 scale = 2;
             }
@@ -90,10 +90,10 @@ int main(int argc, char** argv)
                 exit(1);
             }
         };
-        if (paras.count("--scale")) {
+        if (paras.count("--scale") != 0u) {
             func_fast(paras["--scale"]);
         }
-        else if (paras.count("-s")) {
+        else if (paras.count("-s") != 0u) {
             func_fast(paras["-s"]);
         }
     }
@@ -102,7 +102,7 @@ int main(int argc, char** argv)
     //    return 1;
     //}
 
-    if (paras.count("source")) {
+    if (paras.count("source") != 0u) {
         path = paras["source"];
     }
     else {

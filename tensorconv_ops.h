@@ -34,14 +34,14 @@ namespace tensorconv {
 	}
 
 	Tensor4D Conv2D(const Tensor4D& input, const Tensor4D& filters,
-						const PaddingMode padding_mode,const std::array<int, 4>& strides, const Eigen::ThreadPoolDevice& device);
+						PaddingMode padding_mode,const std::array<int, 4>& strides, const Eigen::ThreadPoolDevice& device);
 
-	Tensor4D Depth2Space(const Tensor4D& input, const int blocksize);
+	Tensor4D Depth2Space(const Tensor4D& input, int blocksize);
 
 	Tensor4D Relu(const Tensor4D& src);
 
-	Tensor4D PRelu(const Tensor4D& src, const Tensor1D& alphas);
+	Tensor4D PRelu(const Tensor4D& input, const Tensor1D& alphas);
 
-	Tensor4D BiasAdd(const Tensor4D& src, const Tensor1D& bias);
+	Tensor4D BiasAdd(const Tensor4D& input, const Tensor1D& bias);
 
 }

@@ -25,8 +25,7 @@ FSRCNN_FAST::FSRCNN_FAST(int scale ):
 }
 
 FSRCNN_FAST::~FSRCNN_FAST()
-{
-}
+= default;
 
 tensorconv::Tensor4D FSRCNN_FAST::SrOp(tensorconv::Tensor4D input)
 {
@@ -98,8 +97,7 @@ FSRCNN_NORMAL::FSRCNN_NORMAL(int scale):
 }
 
 FSRCNN_NORMAL::~FSRCNN_NORMAL()
-{
-}
+= default;
 
 tensorconv::Tensor4D FSRCNN_NORMAL::SrOp(tensorconv::Tensor4D input)
 {

@@ -7,8 +7,8 @@ namespace tensorconv {
 		const Tensor4D& filters, //[filter_height, filter_width, in_channels, out_channels]
 		const PaddingMode padding_mode, const std::array<int, 4>& strides,const Eigen::ThreadPoolDevice& device)
 	{
-		const int filters_shape[] = { filters.dimension(0),filters.dimension(1),filters.dimension(2),filters.dimension(3) };
-		int input_shape[] = { input.dimension(0),input.dimension(1),input.dimension(2),input.dimension(3) };
+		const int filters_shape[] = { static_cast<int>(filters.dimension(0)),static_cast<int>(filters.dimension(1)),static_cast<int>(filters.dimension(2)),static_cast<int>(filters.dimension(3)) };
+		int input_shape[] = { static_cast<int>(input.dimension(0)),static_cast<int>(input.dimension(1)),static_cast<int>(input.dimension(2)),static_cast<int>(input.dimension(3)) };
 
 		int output_shape[] = { input_shape[0],0,0,filters_shape[3] };
 
@@ -27,35 +27,35 @@ namespace tensorconv {
 			strides[1], strides[2], //row_stride, col_stride
 			1, 1, //in_row_stride, in_col_stride
 			pad_t);//padding_type
-		register int batch = patches.dimension(0);
-		register int patche = patches.dimension(1);
-		register int patche_h = patches.dimension(2);
-		register int patche_w = patches.dimension(3);
-		register int channel = patches.dimension(4);
+		int batch = patches.dimension(0);
+		int patche = patches.dimension(1);
+		int patche_h = patches.dimension(2);
+		int patche_w = patches.dimension(3);
+		int channel = patches.dimension(4);
 
 		Tensor4D output = Tensor4D(output_shape[0], output_shape[1], output_shape[2], output_shape[3]);
 		output.setZero();
-		register int f_b;
-		register int b;
+		int f_b;
+		int b;
 
 		const int CPU_NUM = 8;
 		std::array<std::thread*, CPU_NUM> threads;
-		register int thread_id;
+		int thread_id;
 		for (f_b = 0; f_b < filters_shape[3]; ++f_b) { //遍历所有的filter
 			for (b = 0; b < batch; ++b) {	//遍历所有的输入
 				int gap = patche / CPU_NUM;
 				if (patche > CPU_NUM) {
 					for (thread_id = 0; thread_id < CPU_NUM; ++thread_id) {
-						register int begin = thread_id * gap;
-						register int end = (thread_id + 1) * gap;
+						int begin = thread_id * gap;
+						int end = (thread_id + 1) * gap;
 						if (thread_id == (CPU_NUM - 1)) {
 							end = patche;
 						}
 						threads[thread_id] = new std::thread([begin, end, &patche_h , &patche_w , &channel , &f_b , &b, &output , &output_shape, &patches, &filters]() {
-							register int p;
-							register int h;
-							register int w;
-							register int c;
+							int p;
+							int h;
+							int w;
+							int c;
 							for (p = begin; p < end; ++p) {	//遍历生成的patch（这里patch过多，造成性能问题！！！）
 								//确定这个patch所对应的行列索引,这里是Row-Major有效
 								int output_row_index = p / output_shape[2];
@@ -79,10 +79,10 @@ namespace tensorconv {
 					}
 				}
 				else {
-					register int p;
-					register int h;
-					register int w;
-					register int c;
+					int p;
+					int h;
+					int w;
+					int c;
 					for (p = 0; p < patche; ++p) {	//遍历生成的patch（这里patch过多，造成性能问题！！！）
 						//确定这个patch所对应的行列索引,这里是Row-Major有效
 						int output_row_index = p / output_shape[2];
@@ -109,9 +109,9 @@ namespace tensorconv {
 			std::cerr << "blocksize error" << std::endl;
 			abort();
 		}
-		const int input_shape[] = { input.dimension(0),input.dimension(1),input.dimension(2),input.dimension(3) };
+		const int input_shape[] = { static_cast<int>(input.dimension(0)),static_cast<int>(input.dimension(1)),static_cast<int>(input.dimension(2)),static_cast<int>(input.dimension(3)) };
 
-		const int output_shape[] = { input.dimension(0),input.dimension(1) * blocksize,input.dimension(2) * blocksize,input.dimension(3) / (blocksize * blocksize) };
+		const int output_shape[] = { static_cast<int>(input.dimension(0)),static_cast<int>(input.dimension(1) * blocksize),static_cast<int>(input.dimension(2) * blocksize),static_cast<int>(input.dimension(3) / (blocksize * blocksize)) };
 
 		const int dim_6_shape[] = { output_shape[0],input_shape[1],input_shape[2],blocksize,blocksize,output_shape[3] };
 		tensorconv::Tensor6D::Dimensions dim_6_out(dim_6_shape[0], dim_6_shape[1], dim_6_shape[2], dim_6_shape[3], dim_6_shape[4], dim_6_shape[5]);
@@ -123,12 +123,12 @@ namespace tensorconv {
 
 	Tensor4D Relu(const Tensor4D & src)
 	{
-		return src.cwiseMax(0.0f);
+		return src.cwiseMax(0.0F);
 	}
 
 	Tensor4D PRelu(const Tensor4D & input, const Tensor1D & alphas)
 	{
-		int input_shape[] = { input.dimension(0),input.dimension(1),input.dimension(2),input.dimension(3) };
+		int input_shape[] = { static_cast<int>(input.dimension(0)),static_cast<int>(input.dimension(1)),static_cast<int>(input.dimension(2)),input.dimension(3) };
 		if (input_shape[3] != alphas.dimension(0)) {
 			std::cerr << "alpha size error" << std::endl;
 			abort();

@@ -14,8 +14,8 @@
 class FSRCNN
 {
 public:
-	FSRCNN() {};
-	~FSRCNN() {};
+	FSRCNN() = default;
+	~FSRCNN() = default;
 
 	virtual tensorconv::Tensor4D SrOp(tensorconv::Tensor4D y_channel) = 0;
 };
@@ -51,7 +51,7 @@ public:
 	FSRCNN_FAST(int scale);
 	~FSRCNN_FAST();
 
-	tensorconv::Tensor4D SrOp(tensorconv::Tensor4D y_channel);
+	tensorconv::Tensor4D SrOp(tensorconv::Tensor4D input) override;
 };
 
 class FSRCNN_NORMAL :public  FSRCNN {
@@ -91,5 +91,5 @@ public:
 	FSRCNN_NORMAL(int scale);
 	~FSRCNN_NORMAL();
 
-	tensorconv::Tensor4D SrOp(tensorconv::Tensor4D y_channel);
+	tensorconv::Tensor4D SrOp(tensorconv::Tensor4D input) override;
 };
